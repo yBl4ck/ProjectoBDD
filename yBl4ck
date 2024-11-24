@@ -24,9 +24,9 @@ public class Main {
             String queryfalecido = "SELECT * FROM falecido";
 
 
-            // Insertar un nuevo cliente
-           String insertQuery = "INSERT INTO cliente (Nome, CPF/CNPJ, Endereco, Telefone, Email ) " +
-                 "VALUES ('Daniel', '57139797', '2002-01-25', 'Calle Brasil S/N', '(598) 099902556', 'daniel.exemplo@gmail.com')";
+           // Insertar un nuevo cliente
+           String insertQuery = "INSERT INTO cliente (Nome, CPF_CNPJ , Endereco, Telefone, Email ) " +
+                 "VALUES ('Daniel', '57139797', 'Calle Brasil S/N', '(598) 099902556', 'daniel.exemplo@gmail.com')";
            statement = connection.createStatement();
            int rowsAffected = statement.executeUpdate(insertQuery);  // Ejecuta el INSERT
 
@@ -56,7 +56,7 @@ public class Main {
 
             resultSet = updateStatement.executeQuery(queryfalecido);
             while (resultSet.next()) {
-                System.out.println("ID: " + resultSet.getInt("ID") + " | Nome: " + resultSet.getString("Nome") + " | Causa Morte: " + resultSet.getString("Causa_Morte"));
+                System.out.println( "Nome: " + resultSet.getString("Nome") + " | Causa Morte: " + resultSet.getString("Causa_Morte"));
             }
 
             // Eliminar un cliente por ID
