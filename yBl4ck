@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/Funeraria";
         String Usuario = "root";
-        String Contraseña = "root";
+
         try (Connection connection = DriverManager.getConnection(url, Usuario, "")) {
             System.out.println("Conexión exitosa a la base de datos.");
 
@@ -24,11 +24,31 @@ public class Main {
             String queryfalecido = "SELECT * FROM falecido";
 
 
+            String createTableQuery = "CREATE TABLE ServicosExtras (ID_Servico INT AUTO_INCREMENT PRIMARY KEY, Nome_Servico VARCHAR(100) NOT NULL, Preco DECIMAL(10, 2) NOT NULL, Descricao TEXT)";
+            statement.executeUpdate(createTableQuery);  // Executa a criação da tabela
+            System.out.println("Tabela 'ServicosExtras' criada com sucesso.");
+
+            // Inserir  dados na tabela 'ServicosExtras' assim podemos mostrarlos logo depois
+            String insertQuery = "INSERT INTO ServicosExtras (Nome_Servico, Preco, Descricao) VALUES ('Coroa de Flores', 300.00, 'Coroa de flores frescas'), ('Música ao Vivo', 500.00, 'Músico para cerimônia'), " +
+                    "('Decoração Especial', 1000.00, 'Decoração personalizada para o túmulo')";
+            int rowsAffected = statement.executeUpdate(insertQuery);  // Executa o INSERT
+            System.out.println(rowsAffected + " serviço(s) inserido(s) na tabela 'ServicosExtras'.");
+
+
+            String queryServicosExtras = "SELECT * FROM ServicosExtras";
+            resultSet = statement.executeQuery(queryServicosExtras);  // Executa o SELECT
+
+            // Exibir os serviços inseridos na tabela 'ServicosExtras'
+            while (resultSet.next()) {
+                System.out.println("ID_Servico: " + resultSet.getInt("ID_Servico") + " | Nome_Servico: " + resultSet.getString("Nome_Servico") + " | Preço: " + resultSet.getBigDecimal("Preco") +
+                        " | Descrição: " + resultSet.getString("Descricao"));
+            }
+
+
            // Insertar un nuevo cliente
-           String insertQuery = "INSERT INTO cliente (Nome, CPF_CNPJ , Endereco, Telefone, Email ) " +
+           insertQuery = "INSERT INTO cliente (Nome, CPF_CNPJ , Endereco, Telefone, Email ) " +
                  "VALUES ('Daniel', '57139797', 'Calle Brasil S/N', '(598) 099902556', 'daniel.exemplo@gmail.com')";
-           statement = connection.createStatement();
-           int rowsAffected = statement.executeUpdate(insertQuery);  // Ejecuta el INSERT
+           rowsAffected = statement.executeUpdate(insertQuery);  // Ejecuta el INSERT
 
 
             resultSet = statement.executeQuery(querycliente);
@@ -40,9 +60,8 @@ public class Main {
             // Insertar un nuevo tumulo
             insertQuery = "INSERT INTO Tumulo (Quadra, Lote, Tamanho, Tipo_Tumulo, Disponibilidade, Valor) " +
                     "VALUES ('2', '2', 'Extra Grande', 'Familiar', 'Disponivel', '9000')";
-            statement = connection.createStatement();
-            rowsAffected = statement.executeUpdate(insertQuery);  // Ejecuta el INSERT
 
+            rowsAffected = statement.executeUpdate(insertQuery);  // Ejecuta el INSERT
             resultSet = statement.executeQuery(querytumulo);
             while (resultSet.next()) {
                 System.out.println("Quadra: " + resultSet.getString("Quadra") +  " | Lote: " + resultSet.getString("Lote") +  " | Tamanho: " + resultSet.getString("Tamanho") +
@@ -56,18 +75,16 @@ public class Main {
 
             resultSet = updateStatement.executeQuery(queryfalecido);
             while (resultSet.next()) {
-                System.out.println( "Nome: " + resultSet.getString("Nome") + " | Causa Morte: " + resultSet.getString("Causa_Morte"));
-            }
-
-            // Eliminar un cliente por ID
-            //String deleteQuery = "DELETE FROM clientes WHERE ID = 1";
-            //statement = connection.createStatement();
-            //rowsAffected = statement.executeUpdate(deleteQuery);  // Ejecuta el DELETE
-
-            while (resultSet.next()) {
                 System.out.println("Nome: " + resultSet.getString("Nome") + " | Causa de Morte: " + resultSet.getString("Causa_Morte") +
                         " | Data de Morte: " + resultSet.getString("Data_Morte"));
             }
+
+            // Eliminar un cliente por ID
+            //String deleteQuery = "DELETE FROM cliente WHERE ID = 1";
+            //statement = connection.createStatement();
+            //rowsAffected = statement.executeUpdate(deleteQuery);  // Ejecuta el DELETE
+
+
 
         } catch (Exception e) {
             System.out.println("Error al conectar: " + e.getMessage());
